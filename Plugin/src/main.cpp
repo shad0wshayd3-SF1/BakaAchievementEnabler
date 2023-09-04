@@ -41,7 +41,7 @@ class hkShowUsingConsoleMayDisableAchievements
 public:
 	static void Install()
 	{
-		const RelocAddr<std::uintptr_t> target(ADDR + OFF);
+		static RelocAddr<std::uintptr_t> target(ADDR + OFF);
 		DKUtil::Hook::write_call<5>(target.getUIntPtr(), ShowUsingConsoleMayDisableAchievements);
 	}
 
@@ -49,6 +49,26 @@ private:
 	static void ShowUsingConsoleMayDisableAchievements(void*)
 	{
 		return;
+	}
+};
+
+template <std::uintptr_t ADDR, std::ptrdiff_t OFF>
+class hkShowLoadVanillaSaveWithMods
+{
+public:
+	static void Install()
+	{
+		static RelocAddr<std::uintptr_t> target(ADDR + OFF);
+		DKUtil::Hook::write_call<5>(target.getUIntPtr(), ShowLoadVanillaSaveWithMods);
+	}
+
+private:
+	static void ShowLoadVanillaSaveWithMods()
+	{
+		static RelocPtr<std::uint32_t> dword(0x059055E4);
+		(*dword.getPtr()) &= ~2;
+		static RelocAddr<void (*)(void*, void*, std::int32_t, std::int32_t, void*)> func(0x023A9F24);
+		return func(nullptr, nullptr, 0, 0, nullptr);
 	}
 };
 
@@ -69,8 +89,11 @@ namespace
 				hkCheckModsLoaded<0x0258846C, 0x1075>::Install();
 				hkCheckModsLoaded<0x029FC380, 0x007B>::Install();
 
-				// Disable stupid message
+				// Disable "$UsingConsoleMayDisableAchievements" message
 				hkShowUsingConsoleMayDisableAchievements<0x02879B60, 0x67>::Install();
+
+				// Disable "$LoadVanillaSaveWithMods" message
+				hkShowLoadVanillaSaveWithMods<0x023A9F24, 0x9F>::Install();
 				break;
 			}
 		default:
