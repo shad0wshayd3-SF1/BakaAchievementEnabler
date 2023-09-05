@@ -18,13 +18,24 @@ DLLEXPORT constinit auto SFSEPlugin_Version = []() noexcept {
 	return data;
 }();
 
+namespace REL
+{
+	std::uintptr_t write_vfunc(std::uintptr_t a_addr, std::size_t a_idx, std::uintptr_t a_newFunc)
+	{
+		const auto addr = a_addr + (sizeof(void*) * a_idx);
+		const auto result = *reinterpret_cast<std::uintptr_t*>(addr);
+		safeWrite64(addr, a_newFunc);
+		return result;
+	}
+}
+
 template <std::uintptr_t ADDR, std::ptrdiff_t OFF>
 class hkCheckModsLoaded
 {
 public:
 	static void Install()
 	{
-		const RelocAddr<std::uintptr_t> target(ADDR + OFF);
+		static RelocAddr<std::uintptr_t> target(ADDR + OFF);
 		DKUtil::Hook::write_call<5>(target.getUIntPtr(), CheckModsLoaded);
 	}
 
@@ -32,23 +43,6 @@ private:
 	static bool CheckModsLoaded(void*, bool)
 	{
 		return false;
-	}
-};
-
-template <std::uintptr_t ADDR, std::ptrdiff_t OFF>
-class hkShowUsingConsoleMayDisableAchievements
-{
-public:
-	static void Install()
-	{
-		static RelocAddr<std::uintptr_t> target(ADDR + OFF);
-		DKUtil::Hook::write_call<5>(target.getUIntPtr(), ShowUsingConsoleMayDisableAchievements);
-	}
-
-private:
-	static void ShowUsingConsoleMayDisableAchievements(void*)
-	{
-		return;
 	}
 };
 
@@ -72,6 +66,50 @@ private:
 	}
 };
 
+template <std::uintptr_t ADDR, std::ptrdiff_t OFF>
+class hkShowUsingConsoleMayDisableAchievements
+{
+public:
+	static void Install()
+	{
+		static RelocAddr<std::uintptr_t> target(ADDR + OFF);
+		DKUtil::Hook::write_call<5>(target.getUIntPtr(), ShowUsingConsoleMayDisableAchievements);
+	}
+
+private:
+	static void ShowUsingConsoleMayDisableAchievements(void*)
+	{
+		return;
+	}
+};
+
+class hkPlayerCharacterSaveGame
+{
+public:
+	static void Install()
+	{
+		static RelocAddr<std::uintptr_t> target(0x044DB6F0);
+		auto orig = REL::write_vfunc(target.getUIntPtr(), 0x1A, reinterpret_cast<std::uintptr_t>(PlayerCharacterSaveGame));
+		_PlayerCharacterSaveGame = reinterpret_cast<func_t>(orig);
+	}
+
+private:
+	static void PlayerCharacterSaveGame(void* a_this, void* a_buffer)
+	{
+		static RelocPtr<bool> hasModded(0x05905958);
+		(*hasModded.getPtr()) = false;
+
+		static RelocPtr<std::byte*> playerCharacter(0x05594D28);
+		auto flag = reinterpret_cast<bool*>((*playerCharacter.getPtr()) + 0x10E6);
+		*flag &= ~4;
+
+		return _PlayerCharacterSaveGame(a_this, a_buffer);
+	}
+
+	using func_t = std::add_pointer_t<void(void*, void*)>;
+	inline static func_t _PlayerCharacterSaveGame;
+};
+
 namespace
 {
 	void MessageCallback(SFSE::MessagingInterface::Message* a_msg) noexcept
@@ -89,11 +127,14 @@ namespace
 				hkCheckModsLoaded<0x0258846C, 0x1075>::Install();
 				hkCheckModsLoaded<0x029FC380, 0x007B>::Install();
 
+				// Disable "$LoadVanillaSaveWithMods" message
+				hkShowLoadVanillaSaveWithMods<0x023A9F24, 0x9F>::Install();
+
 				// Disable "$UsingConsoleMayDisableAchievements" message
 				hkShowUsingConsoleMayDisableAchievements<0x02879B60, 0x67>::Install();
 
-				// Disable "$LoadVanillaSaveWithMods" message
-				hkShowLoadVanillaSaveWithMods<0x023A9F24, 0x9F>::Install();
+				// Disable modded flag when saving
+				hkPlayerCharacterSaveGame::Install();
 				break;
 			}
 		default:
@@ -121,7 +162,6 @@ DLLEXPORT bool SFSEAPI SFSEPlugin_Load(SFSEInterface* a_sfse)
 
 	INFO("{} v{} loaded", Plugin::NAME, Plugin::Version);
 
-	// do stuff
 	SFSE::AllocTrampoline(1 << 10);
 
 	SFSE::GetMessagingInterface()->RegisterListener(MessageCallback);
