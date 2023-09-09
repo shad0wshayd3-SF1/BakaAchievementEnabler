@@ -19,7 +19,7 @@ class hkCheckModsLoaded
 public:
 	static void Install()
 	{
-		static REL::Relocation<std::uintptr_t> target{ ADDR, OFF };
+		static REL::Relocation<std::uintptr_t> target{ REL::Offset(ADDR), OFF };
 		auto& trampoline = SFSE::GetTrampoline();
 		trampoline.write_call<5>(target.address(), CheckModsLoaded);
 	}
@@ -37,7 +37,7 @@ class hkShowLoadVanillaSaveWithMods
 public:
 	static void Install()
 	{
-		static REL::Relocation<std::uintptr_t> target{ ADDR, OFF };
+		static REL::Relocation<std::uintptr_t> target{ REL::Offset(ADDR), OFF };
 		auto& trampoline = SFSE::GetTrampoline();
 		trampoline.write_call<5>(target.address(), ShowLoadVanillaSaveWithMods);
 	}
@@ -45,10 +45,10 @@ public:
 private:
 	static void ShowLoadVanillaSaveWithMods()
 	{
-		static REL::Relocation<std::uint32_t*> dword{ 0x059055E4 };
+		static REL::Relocation<std::uint32_t*> dword{ REL::Offset(0x059055E4) };
 		(*dword.get()) &= ~2;
 
-		static REL::Relocation<void (*)(void*, void*, std::int32_t, std::int32_t, void*)> func{ 0x023A9F24 };
+		static REL::Relocation<void (*)(void*, void*, std::int32_t, std::int32_t, void*)> func{ REL::Offset(0x023A9F24) };
 		return func(nullptr, nullptr, 0, 0, nullptr);
 	}
 };
@@ -59,7 +59,7 @@ class hkShowUsingConsoleMayDisableAchievements
 public:
 	static void Install()
 	{
-		static REL::Relocation<std::uintptr_t> target{ ADDR, OFF };
+		static REL::Relocation<std::uintptr_t> target{ REL::Offset(ADDR), OFF };
 		auto& trampoline = SFSE::GetTrampoline();
 		trampoline.write_call<5>(target.address(), ShowUsingConsoleMayDisableAchievements);
 	}
@@ -76,17 +76,17 @@ class hkPlayerCharacterSaveGame
 public:
 	static void Install()
 	{
-		static REL::Relocation<std::uintptr_t> target{ 0x044DB6F0 };
+		static REL::Relocation<std::uintptr_t> target{ REL::Offset(0x044DB6F0) };
 		_PlayerCharacterSaveGame = target.write_vfunc(0x1A, PlayerCharacterSaveGame);
 	}
 
 private:
 	static void PlayerCharacterSaveGame(void* a_this, void* a_buffer)
 	{
-		static REL::Relocation<bool*> hasModded{ 0x05905958 };
+		static REL::Relocation<bool*> hasModded{ REL::Offset(0x05905958) };
 		(*hasModded.get()) = false;
 
-		static REL::Relocation<std::byte**> PlayerCharacter{ 0x05594D28 };
+		static REL::Relocation<std::byte**> PlayerCharacter{ REL::Offset(0x05594D28) };
 		auto flag = reinterpret_cast<bool*>((*PlayerCharacter.get()) + 0x10E6);
 		*flag &= ~4;
 
