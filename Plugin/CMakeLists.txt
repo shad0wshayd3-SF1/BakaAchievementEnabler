@@ -39,19 +39,7 @@ source_group(
 # dependencies
 find_package(spdlog CONFIG REQUIRED)
 find_dependency_path(DKUtil include/DKUtil/Logger.hpp)
-find_dependency_path(SFSE sfse/sfse.cpp)
-
-#
-target_compile_options(
-	sfse
-	PRIVATE
-		/WX-
-)
-target_compile_options(
-	sfse_common
-	PRIVATE
-		/WX-
-)
+find_dependency_path(CommonLibSF CommonLibSF/include/SFSE/SFSE.h)
 
 # cmake target
 # runtime
@@ -76,10 +64,10 @@ target_include_directories(
 
 # linkage
 target_link_libraries(
-	${PROJECT_NAME}
+	${PROJECT_NAME} 
 	PRIVATE
 		DKUtil::DKUtil
-		sfse::sfse_common
+		CommonLibSF::CommonLibSF
 		spdlog::spdlog
 )
 
@@ -128,17 +116,17 @@ target_precompile_headers(
 )
 
 set_property(
-	TARGET
+	TARGET 
 	${PROJECT_NAME}
-	PROPERTY VS_USER_PROPS
+	PROPERTY VS_USER_PROPS 
 	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/build_stl_modules.props"
 )
 
 # update deployments
 add_custom_command(
-	TARGET
-	${PROJECT_NAME}
+	TARGET 
+	${PROJECT_NAME} 
 	POST_BUILD
-	COMMAND powershell -NoProfile -ExecutionPolicy Bypass -File
-		"${CMAKE_CURRENT_SOURCE_DIR}/!update.ps1" "DISTRIBUTE" "${PROJECT_VERSION}" "${CMAKE_CURRENT_BINARY_DIR}/$(ConfigurationName)" "${PROJECT_NAME}"
+	COMMAND powershell -NoProfile -ExecutionPolicy Bypass -File 
+		"${CMAKE_CURRENT_SOURCE_DIR}/!update.ps1" "DISTRIBUTE" "${PROJECT_VERSION}" "${CMAKE_CURRENT_BINARY_DIR}/$(ConfigurationName)" "${PROJECT_NAME}" 
 )

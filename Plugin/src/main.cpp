@@ -1,8 +1,3 @@
-#include "SFSE/Stub.h"
-
-#include "sfse_common/Relocation.h"
-#include "sfse_common/SafeWrite.h"
-
 DLLEXPORT constinit auto SFSEPlugin_Version = []() noexcept {
 	SFSE::PluginVersionData data{};
 
@@ -13,21 +8,10 @@ DLLEXPORT constinit auto SFSEPlugin_Version = []() noexcept {
 	//data.UsesAddressLibrary(true);
 	data.HasNoStructUse(true);
 	//data.IsLayoutDependent(true);
-	data.CompatibleVersions({ RUNTIME_VERSION_1_7_23 });
+	data.CompatibleVersions({ SFSE::RUNTIME_LATEST });
 
 	return data;
 }();
-
-namespace REL
-{
-	std::uintptr_t write_vfunc(std::uintptr_t a_addr, std::size_t a_idx, std::uintptr_t a_newFunc)
-	{
-		const auto addr = a_addr + (sizeof(void*) * a_idx);
-		const auto result = *reinterpret_cast<std::uintptr_t*>(addr);
-		safeWrite64(addr, a_newFunc);
-		return result;
-	}
-}
 
 template <std::uintptr_t ADDR, std::ptrdiff_t OFF>
 class hkCheckModsLoaded
@@ -35,8 +19,9 @@ class hkCheckModsLoaded
 public:
 	static void Install()
 	{
-		static RelocAddr<std::uintptr_t> target(ADDR + OFF);
-		DKUtil::Hook::write_call<5>(target.getUIntPtr(), CheckModsLoaded);
+		static REL::Relocation<std::uintptr_t> target{ ADDR, OFF };
+		auto& trampoline = SFSE::GetTrampoline();
+		trampoline.write_call<5>(target.address(), CheckModsLoaded);
 	}
 
 private:
@@ -52,16 +37,18 @@ class hkShowLoadVanillaSaveWithMods
 public:
 	static void Install()
 	{
-		static RelocAddr<std::uintptr_t> target(ADDR + OFF);
-		DKUtil::Hook::write_call<5>(target.getUIntPtr(), ShowLoadVanillaSaveWithMods);
+		static REL::Relocation<std::uintptr_t> target{ ADDR, OFF };
+		auto& trampoline = SFSE::GetTrampoline();
+		trampoline.write_call<5>(target.address(), ShowLoadVanillaSaveWithMods);
 	}
 
 private:
 	static void ShowLoadVanillaSaveWithMods()
 	{
-		static RelocPtr<std::uint32_t> dword(0x059055E4);
-		(*dword.getPtr()) &= ~2;
-		static RelocAddr<void (*)(void*, void*, std::int32_t, std::int32_t, void*)> func(0x023A9F24);
+		static REL::Relocation<std::uint32_t*> dword{ 0x059055E4 };
+		(*dword.get()) &= ~2;
+
+		static REL::Relocation<void (*)(void*, void*, std::int32_t, std::int32_t, void*)> func{ 0x023A9F24 };
 		return func(nullptr, nullptr, 0, 0, nullptr);
 	}
 };
@@ -72,8 +59,9 @@ class hkShowUsingConsoleMayDisableAchievements
 public:
 	static void Install()
 	{
-		static RelocAddr<std::uintptr_t> target(ADDR + OFF);
-		DKUtil::Hook::write_call<5>(target.getUIntPtr(), ShowUsingConsoleMayDisableAchievements);
+		static REL::Relocation<std::uintptr_t> target{ ADDR, OFF };
+		auto& trampoline = SFSE::GetTrampoline();
+		trampoline.write_call<5>(target.address(), ShowUsingConsoleMayDisableAchievements);
 	}
 
 private:
@@ -88,26 +76,24 @@ class hkPlayerCharacterSaveGame
 public:
 	static void Install()
 	{
-		static RelocAddr<std::uintptr_t> target(0x044DB6F0);
-		auto orig = REL::write_vfunc(target.getUIntPtr(), 0x1A, reinterpret_cast<std::uintptr_t>(PlayerCharacterSaveGame));
-		_PlayerCharacterSaveGame = reinterpret_cast<func_t>(orig);
+		static REL::Relocation<std::uintptr_t> target{ 0x044DB6F0 };
+		_PlayerCharacterSaveGame = target.write_vfunc(0x1A, PlayerCharacterSaveGame);
 	}
 
 private:
 	static void PlayerCharacterSaveGame(void* a_this, void* a_buffer)
 	{
-		static RelocPtr<bool> hasModded(0x05905958);
-		(*hasModded.getPtr()) = false;
+		static REL::Relocation<bool*> hasModded{ 0x05905958 };
+		(*hasModded.get()) = false;
 
-		static RelocPtr<std::byte*> playerCharacter(0x05594D28);
-		auto flag = reinterpret_cast<bool*>((*playerCharacter.getPtr()) + 0x10E6);
+		static REL::Relocation<std::byte**> PlayerCharacter{ 0x05594D28 };
+		auto flag = reinterpret_cast<bool*>((*PlayerCharacter.get()) + 0x10E6);
 		*flag &= ~4;
 
 		return _PlayerCharacterSaveGame(a_this, a_buffer);
 	}
 
-	using func_t = std::add_pointer_t<void(void*, void*)>;
-	inline static func_t _PlayerCharacterSaveGame;
+	inline static REL::Relocation<decltype(&PlayerCharacterSaveGame)> _PlayerCharacterSaveGame;
 };
 
 namespace
@@ -148,7 +134,7 @@ namespace
 void SFSEPlugin_Preload(SFSE::LoadInterface* a_sfse);
 /**/
 
-DLLEXPORT bool SFSEAPI SFSEPlugin_Load(SFSEInterface* a_sfse)
+DLLEXPORT bool SFSEAPI SFSEPlugin_Load(const SFSE::LoadInterface* a_sfse)
 {
 #ifndef NDEBUG
 	while (!IsDebuggerPresent()) {
