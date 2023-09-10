@@ -97,9 +97,9 @@ private:
 			static REL::Relocation<bool*> hasModded{ REL::Offset(0x05905958) };
 			(*hasModded.get()) = false;
 
-			static REL::Relocation<std::byte**> PlayerCharacter{ REL::Offset(0x05594D28) };
-			auto flag = reinterpret_cast<bool*>((*PlayerCharacter.get()) + 0x10E6);
-			*flag &= ~4;
+			static REL::Relocation<void**> PlayerCharacter{ REL::Offset(0x05594D28) };
+			auto flag = RE::stl::adjust_pointer<bool>(*PlayerCharacter.get(), 0x10E6);
+			(*flag) &= ~4;
 
 			return _PlayerCharacterSaveGame(a_this, a_buffer);
 		}
