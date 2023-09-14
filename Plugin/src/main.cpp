@@ -9,7 +9,7 @@ public:
 		hkCheckModsLoaded<0x02338BA8, 0x005B>::Install();
 		hkCheckModsLoaded<0x023AC98C, 0x03AC>::Install();
 		hkCheckModsLoaded<0x023B30D8, 0x002F>::Install();
-		hkCheckModsLoaded<0x02579A47, 0x1471>::Install();
+		hkCheckModsLoaded<0x02579A74, 0x1471>::Install();
 		hkCheckModsLoaded<0x025882AC, 0x1075>::Install();
 		hkCheckModsLoaded<0x029FC1C0, 0x007B>::Install();
 
