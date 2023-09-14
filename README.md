@@ -1,17 +1,16 @@
 # 📑 SFSE Plugin Template
-Native dll plugin template (in-draft) for [starfield script extender](https://github.com/ianpatt/sfse).
+Native dll plugin for [starfield script extender](https://github.com/ianpatt/sfse).
+
+[Create a new plugin project from this template](https://github.com/new?template_name=SF_PluginTemplate&template_owner=gottyduke) and wait for the first workflow action to finish, it will setup project automatically.
 
 ## ⚙ Requirements
 
-- [CMake](https://cmake.org/)
+- [CMake 3.26+](https://cmake.org/)
   - Add this to your `PATH`
-- [DKUtil](https://github.com/gottyduke/DKUtil)
-  - Init & update with git submodule
-- [SFSE](https://github.com/ianpatt/sfse)
-  - Init & update with git submodule
 - [PowerShell](https://github.com/PowerShell/PowerShell/releases/latest)
 - [Vcpkg](https://github.com/microsoft/vcpkg)
   - Add the environment variable `VCPKG_ROOT` with the value as the path to the folder containing vcpkg
+  - Make sure your local vcpkg port is up-to-date by pulling the latest and do `vcpkg integrate install`
 - [Visual Studio Community 2022](https://visualstudio.microsoft.com/)
   - Desktop development with C++
 - [Starfield Steam Distribution](#-deployment)
@@ -27,39 +26,21 @@ Native dll plugin template (in-draft) for [starfield script extender](https://gi
 
 ### 🔨 Building
 
-[Create a new github repo from this template](https://github.com/new?template_name=SF_PluginTemplate&template_owner=gottyduke) or (unrecommended): 
+- [CommonLibSF](https://github.com/Starfield-Reverse-Engineering/CommonLibSF)
+- [DKUtil](https://github.com/gottyduke/DKUtil)
+
+These two dependencies can be setup either via git submodule (by executing `update-submodule.bat`) or through a local git repo (by specifying environment variable `CommonLibSFPath` and `DKUtilPath` pointing to local git repo path).
+
+> If having multiple projects, to avoid having copies of CommonLibSF and DKUtil in each of them, it's suggested to use the local fork and environment path approach, so all projects share the same package.
+
 ```
-git clone https://github.com/gottyduke/SF_PluginTemplate.git Plugin
-cd Plugin
-git submodule init
-git submodule update --remote
-.\build-release.ps1
+.\make-sln-msvc.bat
+cmake --build build
 ```
-> Don't forget to change project name within `Plugin/CMakeLists.txt` and update `vcpkg.json` accordingly.
 
 ### 📦 Deployment
 
-This plugin template comes with a simple custom deployer script to enable custom distribution rules fitting most use cases.  
-To get started on adding custom deploy rules, check out the [default examples](Plugin/dist/rules).  
-| action    | usage                                                        |
-| --------- | ------------------------------------------------------------ |
-| `base`    | set variable `params[0]` with value `params[1]`              |
-| `copy`    | copy `params[0]` to `params[1]`                              |
-| `copy_if` | do `copy` if file exists                                     |
-| `package` | add `params[0..-1]` list of sources to zip file `params[-1]` |
-| `remove`  | remove `params` list of sources                              |
-| `script`  | execute raw powershell script                                |
-
-
-The following base variables are provided by default:
-```
-cmake_output    // this is the binary output path
-dist            // this is the dist folder path, also the working directory of deployer script
-project_name    // project name same as CMakeLists
-project_version // project version same as CMakeLists
-```
-
-Deploy actions can be enabled by build configuration(`debug`, `release`, `relwithdebinfo`, etc)
+This plugin template has auto deployment rules for easier build-and-test, build-and-package features, using simple json rules. [Read more here!](https://github.com/gottyduke/SF_PluginTemplate/wiki/Custom-deployment-rules)
 
 ### ➕ DKUtil addon
 
@@ -71,6 +52,5 @@ This project bundles [DKUtil](https://github.com/gottyduke/DKUtil).
 
 ## ❓ Credits
 
-- [Ryan for his commonLibSSE code](https://github.com/Ryan-rsm-McKenzie/CommonLibSSE) which was referenced in DKUtil.
 - [ianpatt's starfield script extender](https://github.com/ianpatt/sfse).
-- [Original plugin template](https://github.com/gottyduke/PluginTemplate)
+- [CommonLibSF, a collaborative effort project](https://github.com/Starfield-Reverse-Engineering/CommonLibSF)

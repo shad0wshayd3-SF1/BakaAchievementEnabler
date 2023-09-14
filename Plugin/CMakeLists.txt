@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.21)
 # info
 project(
 	BakaAchievementEnabler
-	VERSION 1.0.0
+	VERSION 1.4.0
 	LANGUAGES CXX
 )
 
@@ -64,7 +64,7 @@ target_include_directories(
 
 # linkage
 target_link_libraries(
-	${PROJECT_NAME} 
+	${PROJECT_NAME}
 	PRIVATE
 		DKUtil::DKUtil
 		CommonLibSF::CommonLibSF
@@ -104,7 +104,7 @@ if (MSVC)
 			/Zc:trigraphs
 			/Zc:wchar_t
 			/wd4200 # nonstandard extension used : zero-sized array in struct/union
-			/FI${CMAKE_BINARY_DIR}/CMakeFiles/${PROJECT_NAME}.dir/$<CONFIG>/cmake_pch.hxx
+			/FI${CMAKE_CURRENT_SOURCE_DIR}/src/PCH.h
 	)
 endif()
 
@@ -116,17 +116,17 @@ target_precompile_headers(
 )
 
 set_property(
-	TARGET 
+	TARGET
 	${PROJECT_NAME}
-	PROPERTY VS_USER_PROPS 
+	PROPERTY VS_USER_PROPS
 	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/build_stl_modules.props"
 )
 
 # update deployments
 add_custom_command(
-	TARGET 
-	${PROJECT_NAME} 
+	TARGET
+	${PROJECT_NAME}
 	POST_BUILD
-	COMMAND powershell -NoProfile -ExecutionPolicy Bypass -File 
-		"${CMAKE_CURRENT_SOURCE_DIR}/!update.ps1" "DISTRIBUTE" "${PROJECT_VERSION}" "${CMAKE_CURRENT_BINARY_DIR}/$(ConfigurationName)" "${PROJECT_NAME}" 
+	COMMAND powershell -NoProfile -ExecutionPolicy Bypass -File
+		"${CMAKE_CURRENT_SOURCE_DIR}/!update.ps1" "DISTRIBUTE" "${PROJECT_VERSION}" "${CMAKE_CURRENT_BINARY_DIR}/$(ConfigurationName)" "${PROJECT_NAME}"
 )
