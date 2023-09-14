@@ -22,7 +22,7 @@ jobs:
         run: |
           Remove-Item build -Recurse -Force -ErrorAction:SilentlyContinue -Confirm:$False | Out-Null;
           cmake -B build -S Plugin --preset=build-release-msvc-msvc -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake;
-          cmake --build build
+          cmake --build build --config Release
           
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
