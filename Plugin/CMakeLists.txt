@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 
 # info
 project(
-	AchievementEnablerSFSE
+	BakaAchievementEnabler
 	VERSION 1.4.0
 	LANGUAGES CXX
 )
