@@ -153,7 +153,7 @@ DLLEXPORT bool SFSEAPI SFSEPlugin_Load(const SFSE::LoadInterface* a_sfse)
 
 	INFO("{} v{} loaded", Plugin::NAME, Plugin::Version);
 
-	SFSE::AllocTrampoline(1 << 10);
+	SFSE::AllocTrampoline(1 << 8);
 
 	SFSE::GetMessagingInterface()->RegisterListener(MessageCallback);
 
