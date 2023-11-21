@@ -11,7 +11,8 @@
 			"hidden": true,
 			"cacheVariables": {
 				"CMAKE_CXX_FLAGS": "$env{PROJECT_PLATFORM_FLAGS} $env{PROJECT_TEXT_FLAGS} $env{PROJECT_COMPILER_FLAGS} $penv{CXXFLAGS}",
-				"SFSE_SUPPORT_XBYAK": "ON"
+				"SFSE_SUPPORT_XBYAK": "ON",
+				"USING_VCPKG": true
 			},
 			"vendor": {
 				"microsoft.com/VisualStudioSettings/CMake/1.0": {

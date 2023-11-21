@@ -1,8 +1,6 @@
 {
     "name": "bakaachievementenabler",
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-    "version-string": "2.0.0",
-    "description": "plugin template for SFSE native plugins",
     "dependencies": [
         "fmt",
         "spdlog",
@@ -10,5 +8,12 @@
         "simpleini",
         "tomlplusplus",
         "xbyak"
+    ],
+    "builtin-baseline": "a42af01b72c28a8e1d7b48107b33e4f286a55ef6",
+    "overrides": [
+        {
+            "name": "tomlplusplus",
+            "version": "3.1.0"
+        }
     ]
 }
