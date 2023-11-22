@@ -4,20 +4,20 @@ public:
 	static void Install()
 	{
 		// Disable check
-		hkCheckModsLoaded<85112, 0x02ED>::Install();
-		hkCheckModsLoaded<131234, 0x13FE>::Install();
-		hkCheckModsLoaded<146669, 0x005B>::Install();
-		hkCheckModsLoaded<147862, 0x03AC>::Install();
-		hkCheckModsLoaded<147939, 0x002F>::Install();
-		hkCheckModsLoaded<153566, 0x1471>::Install();
-		hkCheckModsLoaded<153715, 0x1075>::Install();
-		hkCheckModsLoaded<171028, 0x007B>::Install();
+		hkCheckModsLoaded<0x14962C4, 0x02ED>::Install();
+		hkCheckModsLoaded<0x1FE1EA0, 0x13FE>::Install();
+		hkCheckModsLoaded<0x2346058, 0x005B>::Install();
+		hkCheckModsLoaded<0x23B9F6C, 0x03AC>::Install();
+		hkCheckModsLoaded<0x23C0728, 0x002F>::Install();
+		hkCheckModsLoaded<0x25891B4, 0x1473>::Install();
+		hkCheckModsLoaded<0x2597A3C, 0x1066>::Install();
+		hkCheckModsLoaded<0x2A0C0E0, 0x007B>::Install();
 
 		// Disable "$LoadVanillaSaveWithMods" message
-		hkShowLoadVanillaSaveWithMods<147839, 0x9F>::Install();
+		hkShowLoadVanillaSaveWithMods<0x23B74D4, 0x9F>::Install();
 
 		// Disable "$UsingConsoleMayDisableAchievements" message
-		hkShowUsingConsoleMayDisableAchievements<166267, 0x67>::Install();
+		hkShowUsingConsoleMayDisableAchievements<0x2889120, 0x67>::Install();
 
 		// Disable modded flag when saving
 		hkPlayerCharacterSaveGame::Install();
@@ -30,7 +30,7 @@ private:
 	public:
 		static void Install()
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
+			static REL::Relocation<std::uintptr_t> target{ REL::Offset(ID), OFF };
 			auto& trampoline = SFSE::GetTrampoline();
 			trampoline.write_call<5>(target.address(), CheckModsLoaded);
 		}
@@ -48,7 +48,7 @@ private:
 	public:
 		static void Install()
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
+			static REL::Relocation<std::uintptr_t> target{ REL::Offset(ID), OFF };
 			auto& trampoline = SFSE::GetTrampoline();
 			trampoline.write_call<5>(target.address(), ShowLoadVanillaSaveWithMods);
 		}
@@ -56,10 +56,10 @@ private:
 	private:
 		static void ShowLoadVanillaSaveWithMods()
 		{
-			static REL::Relocation<std::uint32_t*> dword{ REL::ID(881002) };
+			static REL::Relocation<std::uint32_t*> dword{ REL::Offset(0x59836F4) };
 			(*dword.get()) &= ~2;
 
-			static REL::Relocation<void (*)(void*, void*, std::int32_t, std::int32_t, void*)> func{ REL::ID(147839) };
+			static REL::Relocation<void (*)(void*, void*, std::int32_t, std::int32_t, void*)> func{ REL::Offset(0x23B74D4) };
 			return func(nullptr, nullptr, 0, 0, nullptr);
 		}
 	};
@@ -70,7 +70,7 @@ private:
 	public:
 		static void Install()
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
+			static REL::Relocation<std::uintptr_t> target{ REL::Offset(ID), OFF };
 			auto& trampoline = SFSE::GetTrampoline();
 			trampoline.write_call<5>(target.address(), ShowUsingConsoleMayDisableAchievements);
 		}
@@ -87,18 +87,18 @@ private:
 	public:
 		static void Install()
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(423292) };
+			static REL::Relocation<std::uintptr_t> target{ REL::Offset(0x453EA10) };
 			_PlayerCharacterSaveGame = target.write_vfunc(0x1A, PlayerCharacterSaveGame);
 		}
 
 	private:
 		static void PlayerCharacterSaveGame(void* a_this, void* a_buffer)
 		{
-			static REL::Relocation<bool*> hasModded{ REL::ID(881136) };
+			static REL::Relocation<bool*> hasModded{ REL::Offset(0x5983A1C) };
 			(*hasModded.get()) = false;
 
-			static REL::Relocation<void**> PlayerCharacter{ REL::ID(865059) };
-			auto flag = RE::stl::adjust_pointer<bool>(*PlayerCharacter.get(), 0x10E6);
+			static REL::Relocation<void**> PlayerCharacter{ REL::Offset(0x560B3A8) };
+			auto flag = RE::stl::adjust_pointer<bool>(*PlayerCharacter.get(), 0x10C6);
 			(*flag) &= ~4;
 
 			return _PlayerCharacterSaveGame(a_this, a_buffer);
@@ -115,7 +115,7 @@ DLLEXPORT constinit auto SFSEPlugin_Version = []() noexcept {
 	data.PluginName(Plugin::NAME);
 	data.AuthorName(Plugin::AUTHOR);
 	data.UsesSigScanning(false);
-	data.UsesAddressLibrary(true);
+	data.UsesAddressLibrary(false);
 	data.HasNoStructUse(false);
 	data.IsLayoutDependent(false);
 	data.CompatibleVersions({ SFSE::RUNTIME_LATEST });
