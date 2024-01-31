@@ -4,13 +4,13 @@ public:
 	static void Install()
 	{
 		// Disable check
-		hkCheckModsLoaded<85112, 0x02ED>::Install();
+		hkCheckModsLoaded<85112, 0x02FB>::Install();
 		hkCheckModsLoaded<131234, 0x13FE>::Install();
 		hkCheckModsLoaded<146669, 0x005B>::Install();
 		hkCheckModsLoaded<147862, 0x03AC>::Install();
 		hkCheckModsLoaded<147939, 0x002F>::Install();
-		hkCheckModsLoaded<153566, 0x1473>::Install();
-		hkCheckModsLoaded<153715, 0x1066>::Install();
+		hkCheckModsLoaded<153566, 0x1471>::Install();
+		hkCheckModsLoaded<153715, 0x1075>::Install();
 		hkCheckModsLoaded<171028, 0x007B>::Install();
 
 		// Disable "$LoadVanillaSaveWithMods" message
@@ -98,7 +98,7 @@ private:
 			(*hasModded.get()) = false;
 
 			static REL::Relocation<void**> PlayerCharacter{ REL::ID(865059) };
-			auto flag = RE::stl::adjust_pointer<bool>(*PlayerCharacter.get(), 0x10C6);
+			auto flag = RE::stl::adjust_pointer<bool>(*PlayerCharacter.get(), 0x1116);
 			(*flag) &= ~4;
 
 			return _PlayerCharacterSaveGame(a_this, a_buffer);
