@@ -1,6 +1,6 @@
-[submodule "extern/DKUtil"]
-	path = extern/DKUtil
-	url = https://github.com/gottyduke/DKUtil.git
 [submodule "extern/CommonLibSF"]
 	path = extern/CommonLibSF
-	url = https://github.com/Starfield-Reverse-Engineering/CommonLibSF.git
+	url = https://github.com/shad0wshayd3-SF1/CommonLibSF.git
+[submodule "extern/DKUtil"]
+	path = extern/DKUtil
+	url = https://github.com/shad0wshayd3/DKUtil.git
