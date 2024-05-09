@@ -11,8 +11,7 @@
 			"hidden": true,
 			"cacheVariables": {
 				"CMAKE_CXX_FLAGS": "$env{PROJECT_PLATFORM_FLAGS} $env{PROJECT_TEXT_FLAGS} $env{PROJECT_COMPILER_FLAGS} $penv{CXXFLAGS}",
-				"SFSE_SUPPORT_XBYAK": "ON",
-				"USING_VCPKG": true
+				"SFSE_SUPPORT_XBYAK": "ON"
 			},
 			"vendor": {
 				"microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -26,10 +25,9 @@
 			"name": "packaging-vcpkg",
 			"hidden": true,
 			"cacheVariables": {
-				"CMAKE_TOOLCHAIN_FILE": {
-					"type": "STRING",
-					"value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-				},
+				"USING_VCPKG": "ON",
+				"CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+				"VCPKG_HOST_TRIPLET": "x64-windows-static-md",
 				"VCPKG_TARGET_TRIPLET": "x64-windows-static-md"
 			}
 		},
@@ -70,7 +68,7 @@
 			"name": "compiler-msvc",
 			"hidden": true,
 			"environment": {
-				"PROJECT_COMPILER_FLAGS": "/cgthreads8 /diagnostics:caret /fp:contract /fp:except- /guard:cf- /permissive- /Zc:__cplusplus /Zc:enumTypes /Zc:lambda /Zc:preprocessor /Zc:referenceBinding /Zc:rvalueCast /Zc:templateScope /Zc:ternary /Zc:preprocessor /EHsc /MP /W4 /WX /external:anglebrackets /external:W0",
+				"PROJECT_COMPILER_FLAGS": "/cgthreads8 /diagnostics:caret /fp:contract /fp:except- /guard:cf- /permissive- /Zc:__cplusplus /Zc:lambda /Zc:preprocessor /Zc:referenceBinding /Zc:rvalueCast /Zc:templateScope /Zc:ternary /Zc:preprocessor /EHsc /MP /W4 /external:anglebrackets /external:W0",
 				"PROJECT_COMPILER": "msvc"
 			}
 		},
@@ -102,7 +100,7 @@
 			"environment": {
 				"CC": "clang-cl",
 				"CXX": "clang-cl",
-				"PROJECT_COMPILER_FLAGS": "/permissive- /EHsc /W4 /WX -Wno-overloaded-virtual -Wno-delete-non-abstract-non-virtual-dtor -Wno-inconsistent-missing-override -Wno-reinterpret-base-class -D__cpp_consteval"
+				"PROJECT_COMPILER_FLAGS": "/permissive- /EHsc /W4 -Wno-overloaded-virtual -Wno-delete-non-abstract-non-virtual-dtor -Wno-inconsistent-missing-override -Wno-reinterpret-base-class -D__cpp_consteval"
 			}
 		},
 		{
