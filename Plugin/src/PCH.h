@@ -118,3 +118,20 @@ using namespace REL::literals;
 // DKUtil
 #include "DKUtil/Hook.hpp"
 #include "DKUtil/Logger.hpp"
+
+// SFSEPlugin_Version
+DLLEXPORT constinit auto SFSEPlugin_Version = []() noexcept
+{
+	SFSE::PluginVersionData data{};
+
+	data.PluginVersion(Plugin::Version);
+	data.PluginName(Plugin::NAME);
+	data.AuthorName(Plugin::AUTHOR);
+	data.UsesAddressLibrary(true);
+	data.UsesSigScanning(false);
+	data.IsLayoutDependent(true);
+	data.HasNoStructUse(false);
+	data.CompatibleVersions({ SFSE::RUNTIME_LATEST });
+
+	return data;
+}();

@@ -108,22 +108,6 @@ private:
 	};
 };
 
-DLLEXPORT constinit auto SFSEPlugin_Version = []() noexcept
-{
-	SFSE::PluginVersionData data{};
-
-	data.PluginVersion(Plugin::Version);
-	data.PluginName(Plugin::NAME);
-	data.AuthorName(Plugin::AUTHOR);
-	data.UsesSigScanning(false);
-	data.UsesAddressLibrary(true);
-	data.HasNoStructUse(false);
-	data.IsLayoutDependent(true);
-	data.CompatibleVersions({ SFSE::RUNTIME_LATEST });
-
-	return data;
-}();
-
 namespace
 {
 	void MessageCallback(SFSE::MessagingInterface::Message* a_msg) noexcept
