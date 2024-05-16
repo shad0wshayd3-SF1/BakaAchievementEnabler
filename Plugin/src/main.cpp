@@ -4,13 +4,13 @@ public:
 	static void Install()
 	{
 		// Disable check
-		hkCheckModsLoaded<85112, 0x02FB>::Install();
+		hkCheckModsLoaded<85112, 0x0307>::Install();
 		hkCheckModsLoaded<131234, 0x13FE>::Install();
 		hkCheckModsLoaded<146669, 0x005B>::Install();
 		hkCheckModsLoaded<147862, 0x03AC>::Install();
 		hkCheckModsLoaded<147939, 0x002F>::Install();
 		hkCheckModsLoaded<153566, 0x140E>::Install();
-		hkCheckModsLoaded<153715, 0x1075>::Install();
+		hkCheckModsLoaded<153715, 0x106E>::Install();
 		hkCheckModsLoaded<171028, 0x007B>::Install();
 
 		// Disable "$LoadVanillaSaveWithMods" message
@@ -128,20 +128,15 @@ namespace
 DLLEXPORT bool SFSEAPI SFSEPlugin_Load(const SFSE::LoadInterface* a_sfse)
 {
 #ifndef NDEBUG
-	while (!IsDebuggerPresent())
-	{
-		Sleep(100);
-	}
+	MessageBoxA(NULL, "Loaded. You can now attach the debugger or continue execution.", Plugin::NAME.data(), NULL);
 #endif
 
 	SFSE::Init(a_sfse);
 
 	DKUtil::Logger::Init(Plugin::NAME, std::to_string(Plugin::Version));
-
 	INFO("{} v{} loaded", Plugin::NAME, Plugin::Version);
 
 	SFSE::AllocTrampoline(1 << 8);
-
 	SFSE::GetMessagingInterface()->RegisterListener(MessageCallback);
 
 	return true;
