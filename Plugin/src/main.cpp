@@ -3,24 +3,27 @@ class Hooks
 public:
 	static void Install()
 	{
-		// Disable check
-		hkCheckModsLoaded<85112, 0x0307>::Install();
-		hkCheckModsLoaded<131234, 0x13FE>::Install();
-		hkCheckModsLoaded<146669, 0x005B>::Install();
-		hkCheckModsLoaded<147862, 0x03AC>::Install();
-		hkCheckModsLoaded<147939, 0x002F>::Install();
-		hkCheckModsLoaded<153566, 0x140E>::Install();
-		hkCheckModsLoaded<153715, 0x106E>::Install();
-		hkCheckModsLoaded<171028, 0x007B>::Install();
+		// Disable CheckModsLoaded
+		hkCheckModsLoaded<131234, 0x13FE>::Install();  // Main_CreatePlayerCharacter
+		hkCheckModsLoaded<147862, 0x03AC>::Install();  // BGSSaveLoadManager::GenerateSaveFileName
+		hkCheckModsLoaded<147939, 0x002F>::Install();  // BGSSaveLoadManager::???
+		hkCheckModsLoaded<153566, 0x1410>::Install();  // PlayerCharacter::LoadGame
+		hkCheckModsLoaded<153715, 0x107C>::Install();  // PlayerCharacter::SaveGame
 
 		// Disable "$LoadVanillaSaveWithMods" message
-		hkShowLoadVanillaSaveWithMods<147839, 0xA2>::Install();
+		hkShowLoadVanillaSaveWithMods<1869664, 0x10B>::Install();
 
 		// Disable "$UsingConsoleMayDisableAchievements" message
 		hkShowUsingConsoleMayDisableAchievements<166267, 0x67>::Install();
 
 		// Disable modded flag when saving
 		hkPlayerCharacterSaveGame::Install();
+
+		// Disable new AddAchievement check
+		hkAddAchievement::Install();
+
+		// Disable ConfirmNewWithModsCallback
+		hkConfirmNewWithModsCallback::Install();
 	}
 
 private:
@@ -56,10 +59,10 @@ private:
 	private:
 		static void ShowLoadVanillaSaveWithMods()
 		{
-			static REL::Relocation<std::uint32_t*> dword{ REL::ID(881002) };
+			static REL::Relocation<std::uint32_t*> dword{ REL::ID(1969023) };
 			(*dword.get()) &= ~2;
 
-			static REL::Relocation<void (*)(void*, void*, std::int32_t, std::int32_t, void*)> func{ REL::ID(147839) };
+			static REL::Relocation<void (*)(void*, void*, std::int32_t, std::int32_t, void*)> func{ REL::ID(1869664) };
 			return func(nullptr, nullptr, 0, 0, nullptr);
 		}
 	};
@@ -98,13 +101,33 @@ private:
 			(*hasModded.get()) = false;
 
 			static REL::Relocation<void**> PlayerCharacter{ REL::ID(865059) };
-			auto flag = RE::stl::adjust_pointer<bool>(*PlayerCharacter.get(), 0x110E);
+			auto flag = RE::stl::adjust_pointer<bool>(*PlayerCharacter.get(), 0x1116);
 			(*flag) &= ~4;
 
 			return _PlayerCharacterSaveGame(a_this, a_buffer);
 		}
 
 		inline static REL::Relocation<decltype(&PlayerCharacterSaveGame)> _PlayerCharacterSaveGame;
+	};
+
+	class hkAddAchievement
+	{
+	public:
+		static void Install()
+		{
+			static REL::Relocation<std::uintptr_t> target{ REL::ID(171028), 0x72 };
+			REL::safe_fill(target.address(), REL::NOP, 0x0D);
+		}
+	};
+
+	class hkConfirmNewWithModsCallback
+	{
+	public:
+		static void Install()
+		{
+			static REL::Relocation<std::uintptr_t> target{ REL::ID(1869550), 0xCF };
+			REL::safe_fill(target.address(), 0x02, 0x01);
+		}
 	};
 };
 
