@@ -8,7 +8,7 @@ public:
 		hkCheckModsLoaded<147862, 0x03AC>::Install();  // BGSSaveLoadManager::GenerateSaveFileName
 		hkCheckModsLoaded<147939, 0x002F>::Install();  // BGSSaveLoadManager::???
 		hkCheckModsLoaded<153566, 0x1410>::Install();  // PlayerCharacter::LoadGame
-		hkCheckModsLoaded<153715, 0x107C>::Install();  // PlayerCharacter::SaveGame
+		hkCheckModsLoaded<153715, 0x1097>::Install();  // PlayerCharacter::SaveGame
 
 		// Disable "$LoadVanillaSaveWithMods" message
 		hkShowLoadVanillaSaveWithMods<1869664, 0x10B>::Install();
@@ -125,7 +125,7 @@ private:
 	public:
 		static void Install()
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(1869550), 0xCF };
+			static REL::Relocation<std::uintptr_t> target{ REL::ID(1869550), 0xCB };
 			REL::safe_fill(target.address(), 0x02, 0x01);
 		}
 	};
