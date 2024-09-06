@@ -101,7 +101,7 @@ private:
 			(*hasModded.get()) = false;
 
 			static REL::Relocation<void**> PlayerCharacter{ REL::ID(865059) };
-			auto flag = RE::stl::adjust_pointer<bool>(*PlayerCharacter.get(), 0x1116);
+			auto flag = RE::stl::adjust_pointer<std::uint8_t>(*PlayerCharacter.get(), 0x1116);
 			(*flag) &= ~4;
 
 			return _PlayerCharacterSaveGame(a_this, a_buffer);
