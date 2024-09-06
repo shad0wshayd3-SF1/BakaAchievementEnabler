@@ -10,12 +10,17 @@ set_version("4.0.0")
 set_license("GPL-3.0")
 
 -- set defaults
+set_arch("x64")
 set_languages("c++23")
+set_optimize("faster")
 set_warnings("allextra", "error")
 set_defaultmode("releasedbg")
 
+-- lto
+set_policy("build.optimization.lto", true)
+
 -- add rules
-add_rules("mode.debug", "mode.releasedbg")
+add_rules("mode.releasedbg")
 add_rules("plugin.vsxmake.autoupdate")
 
 -- setup targets
