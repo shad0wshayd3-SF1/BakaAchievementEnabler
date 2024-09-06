@@ -1,6 +1,3 @@
-[submodule "extern/CommonLibSF"]
-	path = extern/CommonLibSF
+[submodule "extern/commonlibsf"]
+	path = extern/commonlibsf
 	url = https://github.com/shad0wshayd3-SF1/CommonLibSF.git
-[submodule "extern/DKUtil"]
-	path = extern/DKUtil
-	url = https://github.com/shad0wshayd3/DKUtil.git

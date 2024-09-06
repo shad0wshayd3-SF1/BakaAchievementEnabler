@@ -1,3 +1,5 @@
 echo off
+rd /s /q "%~dp0/.xmake"
 rd /s /q "%~dp0/build"
-cmake -B "%~dp0/build" -S "%~dp0/Plugin" --preset=build-debug-msvc-msvc
+rd /s /q "%~dp0/vsxmake2022"
+xmake project -k vsxmake
