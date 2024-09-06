@@ -148,16 +148,12 @@ namespace
 	}
 }
 
-DLLEXPORT bool SFSEAPI SFSEPlugin_Load(const SFSE::LoadInterface* a_sfse)
+SFSEPluginLoad(const SFSE::LoadInterface* a_sfse)
 {
-#ifndef NDEBUG
-	MessageBoxA(NULL, "Loaded. You can now attach the debugger or continue execution.", Plugin::NAME.data(), NULL);
-#endif
-
 	SFSE::Init(a_sfse);
 
-	DKUtil::Logger::Init(Plugin::NAME, std::to_string(Plugin::Version));
-	INFO("{} v{} loaded", Plugin::NAME, Plugin::Version);
+	const auto plugin = SFSE::PluginVersionData::GetSingleton();
+	SFSE::log::info("{} {} loaded", plugin->GetPluginName(), plugin->GetPluginVersion());
 
 	SFSE::AllocTrampoline(1 << 8);
 	SFSE::GetMessagingInterface()->RegisterListener(MessageCallback);
