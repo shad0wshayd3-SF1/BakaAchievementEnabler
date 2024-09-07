@@ -1,7 +1,7 @@
 -- set xmake version
 set_xmakever("2.9.4")
 
--- includes
+-- include local folders
 includes("extern/commonlibsf")
 
 -- set project
@@ -16,16 +16,16 @@ set_optimize("faster")
 set_warnings("allextra", "error")
 set_defaultmode("releasedbg")
 
--- lto
+-- enable lto
 set_policy("build.optimization.lto", true)
 
 -- add rules
-add_rules("mode.releasedbg")
+add_rules("mode.debug", "mode.releasedbg")
 add_rules("plugin.vsxmake.autoupdate")
 
 -- setup targets
 target("BakaAchievementEnabler")
-    -- bind dependencies
+    -- bind local dependencies
     add_deps("commonlibsf")
 
     -- add commonlibsf plugin
@@ -36,7 +36,7 @@ target("BakaAchievementEnabler")
 
     -- add source files
     add_files("src/*.cpp")
-    add_headerfiles("src/**.h")
+    add_headerfiles("src/*.h")
     add_includedirs("src")
     set_pcxxheader("src/PCH.h")
 
