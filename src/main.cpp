@@ -6,7 +6,6 @@ public:
 		// Disable CheckModsLoaded
 		hkCheckModsLoaded<131234, 0x13FE>::Install();  // Main_CreatePlayerCharacter
 		hkCheckModsLoaded<147862, 0x03AC>::Install();  // BGSSaveLoadManager::GenerateSaveFileName
-		hkCheckModsLoaded<147939, 0x002F>::Install();  // BGSSaveLoadManager::???
 		hkCheckModsLoaded<153566, 0x1410>::Install();  // PlayerCharacter::LoadGame
 		hkCheckModsLoaded<153715, 0x1097>::Install();  // PlayerCharacter::SaveGame
 
