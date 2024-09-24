@@ -3,20 +3,11 @@ class Hooks
 public:
 	static void Install()
 	{
-		// Disable CheckModsLoaded
-		hkCheckModsLoaded<131234, 0x13FE>::Install();  // Main_CreatePlayerCharacter
-		hkCheckModsLoaded<147862, 0x03AC>::Install();  // BGSSaveLoadManager::GenerateSaveFileName
-		hkCheckModsLoaded<153566, 0x1410>::Install();  // PlayerCharacter::LoadGame
-		hkCheckModsLoaded<153715, 0x1097>::Install();  // PlayerCharacter::SaveGame
-
 		// Disable "$LoadVanillaSaveWithMods" message
-		hkShowLoadVanillaSaveWithMods<1869664, 0x10B>::Install();
+		hkShowLoadVanillaSaveWithMods::Install();
 
 		// Disable "$UsingConsoleMayDisableAchievements" message
-		hkShowUsingConsoleMayDisableAchievements<166267, 0x67>::Install();
-
-		// Disable modded flag when saving
-		hkPlayerCharacterSaveGame::Install();
+		hkShowUsingConsoleMayDisableAchievements::Install();
 
 		// Disable new AddAchievement check
 		hkAddAchievement::Install();
@@ -26,31 +17,12 @@ public:
 	}
 
 private:
-	template <std::uintptr_t ID, std::ptrdiff_t OFF>
-	class hkCheckModsLoaded
-	{
-	public:
-		static void Install()
-		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
-			auto& trampoline = SFSE::GetTrampoline();
-			trampoline.write_call<5>(target.address(), CheckModsLoaded);
-		}
-
-	private:
-		static bool CheckModsLoaded(void*, bool)
-		{
-			return false;
-		}
-	};
-
-	template <std::uintptr_t ID, std::ptrdiff_t OFF>
 	class hkShowLoadVanillaSaveWithMods
 	{
 	public:
 		static void Install()
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
+			static REL::Relocation<std::uintptr_t> target{ REL::ID(1869664), 0x10B };
 			auto& trampoline = SFSE::GetTrampoline();
 			trampoline.write_call<5>(target.address(), ShowLoadVanillaSaveWithMods);
 		}
@@ -66,47 +38,14 @@ private:
 		}
 	};
 
-	template <std::uintptr_t ID, std::ptrdiff_t OFF>
 	class hkShowUsingConsoleMayDisableAchievements
 	{
 	public:
 		static void Install()
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(ID), OFF };
-			auto& trampoline = SFSE::GetTrampoline();
-			trampoline.write_call<5>(target.address(), ShowUsingConsoleMayDisableAchievements);
+			static REL::Relocation<std::uintptr_t> target{ REL::ID(166267), 0x67 };
+			REL::safe_fill(target.address(), REL::NOP, 0x05);
 		}
-
-	private:
-		static void ShowUsingConsoleMayDisableAchievements(void*)
-		{
-			return;
-		}
-	};
-
-	class hkPlayerCharacterSaveGame
-	{
-	public:
-		static void Install()
-		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(423292) };
-			_PlayerCharacterSaveGame = target.write_vfunc(0x1A, PlayerCharacterSaveGame);
-		}
-
-	private:
-		static void PlayerCharacterSaveGame(void* a_this, void* a_buffer)
-		{
-			static REL::Relocation<bool*> hasModded{ REL::ID(881136) };
-			(*hasModded.get()) = false;
-
-			static REL::Relocation<void**> PlayerCharacter{ REL::ID(865059) };
-			auto flag = RE::stl::adjust_pointer<std::uint8_t>(*PlayerCharacter.get(), 0x1116);
-			(*flag) &= ~4;
-
-			return _PlayerCharacterSaveGame(a_this, a_buffer);
-		}
-
-		inline static REL::Relocation<decltype(&PlayerCharacterSaveGame)> _PlayerCharacterSaveGame;
 	};
 
 	class hkAddAchievement
@@ -154,7 +93,7 @@ SFSEPluginLoad(const SFSE::LoadInterface* a_sfse)
 	const auto plugin = SFSE::PluginVersionData::GetSingleton();
 	SFSE::log::info("{} {} loaded", plugin->GetPluginName(), plugin->GetPluginVersion());
 
-	SFSE::AllocTrampoline(1 << 8);
+	SFSE::AllocTrampoline(16);
 	SFSE::GetMessagingInterface()->RegisterListener(MessageCallback);
 
 	return true;
