@@ -23,6 +23,9 @@ set_policy("build.optimization.lto", true)
 add_rules("mode.debug", "mode.releasedbg")
 add_rules("plugin.vsxmake.autoupdate")
 
+-- enable xbyak
+set_config("sfse_xbyak", true)
+
 -- setup targets
 target("BakaAchievementEnabler")
     -- bind local dependencies
