@@ -6,14 +6,14 @@ public:
 		// Disable "$LoadVanillaSaveWithMods" message
 		hkShowLoadVanillaSaveWithMods::Install();
 
+		// Disable "ConfirmNewWithModsCallback" message
+		hkConfirmNewWithModsCallback::Install();
+
 		// Disable "$UsingConsoleMayDisableAchievements" message
 		hkShowUsingConsoleMayDisableAchievements::Install();
 
 		// Disable ConsoleCommand check in CheckModsLoaded
 		hkCheckModsLoaded::Install();
-
-		// Disable "ConfirmNewWithModsCallback" message
-		hkConfirmNewWithModsCallback::Install();
 
 		// Disable UserContent func1
 		//hkUserContentFunc1<1869655, 0x066>::Install();
@@ -53,6 +53,16 @@ private:
 		}
 	};
 
+	class hkConfirmNewWithModsCallback
+	{
+	public:
+		static void Install()
+		{
+			static REL::Relocation<std::uintptr_t> target{ REL::ID(1869550), 0xCB };
+			REL::safe_fill(target.address(), 0x02, 0x01);
+		}
+	};
+
 	class hkShowUsingConsoleMayDisableAchievements
 	{
 	public:
@@ -85,16 +95,6 @@ private:
 			auto patch = PatchConsoleBoolean(target.address() + 0x10);
 			auto alloc = trampoline.allocate(patch);
 			trampoline.write_branch<5>(target.address(), reinterpret_cast<std::uintptr_t>(alloc));
-		}
-	};
-
-	class hkConfirmNewWithModsCallback
-	{
-	public:
-		static void Install()
-		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(1869550), 0xCB };
-			REL::safe_fill(target.address(), 0x02, 0x01);
 		}
 	};
 
