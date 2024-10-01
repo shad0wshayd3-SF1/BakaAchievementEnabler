@@ -6,7 +6,7 @@ includes("extern/commonlibsf")
 
 -- set project
 set_project("BakaAchievementEnabler")
-set_version("4.0.1")
+set_version("4.1.0")
 set_license("GPL-3.0")
 
 -- set defaults
@@ -34,7 +34,10 @@ target("BakaAchievementEnabler")
     -- add commonlibsf plugin
     add_rules("commonlibsf.plugin", {
         name = "BakaAchievementEnabler",
-        author = "shad0wshayd3"
+        author = "shad0wshayd3",
+        options = {
+            no_struct_use = true
+        }
     })
 
     -- add source files

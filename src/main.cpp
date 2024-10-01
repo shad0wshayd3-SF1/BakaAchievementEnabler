@@ -14,7 +14,7 @@ public:
 		//hkUserContentFunc1<1869657, 0x086>::Install();
 		//hkUserContentFunc1<1869669, 0x936>::Install();
 
-		// Disable UserContent func2
+		// Disable UserContent func2 "Creations" "data" "%s%s"
 		//hkUserContentFunc2<1869955, 0x13B>::Install();
 		//hkUserContentFunc2<1869962, 0x15A>::Install();
 		//hkUserContentFunc2<1870073, 0x053>::Install();
@@ -41,23 +41,25 @@ private:
 	public:
 		static void Install()
 		{
-			struct PatchConsoleBoolean :
-				Xbyak::CodeGenerator
+			struct PatchConsoleBoolean : Xbyak::CodeGenerator
 			{
-				PatchConsoleBoolean(std::uintptr_t a_end)
+				PatchConsoleBoolean(std::uintptr_t a_retn)
 				{
-					mov(rdi, a_end);
+					mov(rdi, a_retn);
 					jmp(rdi);
 				}
 			};
 
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(85097), 0x28 };
-			REL::safe_fill(target.address(), REL::NOP, 0x09);
+			static REL::Relocation<std::uintptr_t> target{ REL::ID(85097) };
+			static constexpr auto TARGET_ADDR{ 0x28 };
+			static constexpr auto TARGET_RETN{ 0x31 };
+			static constexpr auto TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
+			REL::safe_fill(target.address() + TARGET_ADDR, REL::NOP, TARGET_FILL);
 
+			auto code = PatchConsoleBoolean(
+				target.address() + TARGET_RETN);
 			auto& trampoline = SFSE::GetTrampoline();
-			auto patch = PatchConsoleBoolean(target.address() + 0x10);
-			auto alloc = trampoline.allocate(patch);
-			trampoline.write_branch<5>(target.address(), reinterpret_cast<std::uintptr_t>(alloc));
+			trampoline.write_branch<5>(target.address() + TARGET_ADDR, trampoline.allocate(code));
 		}
 	};
 
