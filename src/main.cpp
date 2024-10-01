@@ -52,8 +52,8 @@ private:
 
 			static REL::Relocation<std::uintptr_t> target{ REL::ID(85097) };
 			static constexpr auto TARGET_ADDR{ 0x28 };
-			static constexpr auto TARGET_RETN{ 0x31 };
-			static constexpr auto TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
+			static constexpr auto TARGET_RETN{ 0x38 };
+			static constexpr auto TARGET_FILL{ 0x09 };
 			REL::safe_fill(target.address() + TARGET_ADDR, REL::NOP, TARGET_FILL);
 
 			auto code = PatchConsoleBoolean(

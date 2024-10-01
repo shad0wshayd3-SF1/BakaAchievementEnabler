@@ -6,7 +6,7 @@ includes("extern/commonlibsf")
 
 -- set project
 set_project("BakaAchievementEnabler")
-set_version("4.1.0")
+set_version("4.1.1")
 set_license("GPL-3.0")
 
 -- set defaults
