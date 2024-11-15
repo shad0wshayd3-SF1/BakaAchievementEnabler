@@ -1,19 +1,7 @@
-class Hooks
+namespace Hooks
 {
-public:
-	static void Install()
+	namespace hkShowUsingConsoleMayDisableAchievements
 	{
-		// Disable "$UsingConsoleMayDisableAchievements" message
-		hkShowUsingConsoleMayDisableAchievements::Install();
-
-		// Disable AddAchievement checks
-		hkAddAchievement::Install();
-	}
-
-	class hkShowUsingConsoleMayDisableAchievements :
-		public REX::Singleton<hkShowUsingConsoleMayDisableAchievements>
-	{
-	public:
 		static void Install()
 		{
 			static REL::Relocation<std::uintptr_t> target{ REL::ID(166267) };
@@ -22,12 +10,10 @@ public:
 			static constexpr auto TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
 			REL::safe_fill(target.address() + TARGET_ADDR, REL::NOP, TARGET_FILL);
 		}
-	};
+	}
 
-	class hkAddAchievement :
-		public REX::Singleton<hkAddAchievement>
+	namespace hkAddAchievement
 	{
-	public:
 		static void Install()
 		{
 			static REL::Relocation<std::uintptr_t> target{ REL::ID(171028) };
@@ -36,8 +22,17 @@ public:
 			static constexpr auto TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
 			REL::safe_fill(target.address() + TARGET_ADDR, REL::NOP, TARGET_FILL);
 		}
-	};
-};
+	}
+
+	static void Install()
+	{
+		// Disable "$UsingConsoleMayDisableAchievements" message
+		hkShowUsingConsoleMayDisableAchievements::Install();
+
+		// Disable AddAchievement checks
+		hkAddAchievement::Install();
+	}
+}
 
 namespace
 {
