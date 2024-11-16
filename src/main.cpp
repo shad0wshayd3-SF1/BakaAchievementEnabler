@@ -4,7 +4,7 @@ namespace Hooks
 	{
 		static void Install()
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(166267) };
+			static REL::Relocation target{ REL::ID(166267) };
 			static constexpr auto TARGET_ADDR{ 0x67 };
 			static constexpr auto TARGET_RETN{ 0x6C };
 			static constexpr auto TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
@@ -16,7 +16,7 @@ namespace Hooks
 	{
 		static void Install()
 		{
-			static REL::Relocation<std::uintptr_t> target{ REL::ID(171028) };
+			static REL::Relocation target{ REL::ID(171028) };
 			static constexpr auto TARGET_ADDR{ 0x71 };
 			static constexpr auto TARGET_RETN{ 0xF3 };
 			static constexpr auto TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
