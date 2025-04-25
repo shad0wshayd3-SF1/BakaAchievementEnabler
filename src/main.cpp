@@ -24,6 +24,18 @@ namespace Hooks
 		}
 	}
 
+	namespace hkNoModdedTag
+	{
+		static void Install()
+		{
+			static REL::Relocation target{ REL::ID(134148) };
+			static constexpr auto TARGET_ADDR{ 0x12F };
+			static constexpr auto TARGET_RETN{ 0x153 };
+			static constexpr auto TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
+			REL::safe_fill(target.address() + TARGET_ADDR, REL::NOP, TARGET_FILL);
+		}
+	}
+
 	static void Install()
 	{
 		// Disable "$UsingConsoleMayDisableAchievements" message
@@ -31,6 +43,9 @@ namespace Hooks
 
 		// Disable AddAchievement checks
 		hkAddAchievement::Install();
+
+		// Disable modded tag
+		hkNoModdedTag::Install();
 	}
 }
 
@@ -55,6 +70,5 @@ SFSEPluginLoad(const SFSE::LoadInterface* a_sfse)
 {
 	SFSE::Init(a_sfse);
 	SFSE::GetMessagingInterface()->RegisterListener(MessageCallback);
-
 	return true;
 }
