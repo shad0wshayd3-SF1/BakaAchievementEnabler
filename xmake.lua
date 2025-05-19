@@ -2,7 +2,7 @@
 set_xmakever("2.9.4")
 
 -- include local folders
-includes("extern/commonlibsf")
+includes("lib/commonlibsf")
 
 -- set project
 set_project("BakaAchievementEnabler")
@@ -10,18 +10,16 @@ set_version("5.1.0")
 set_license("GPL-3.0")
 
 -- set defaults
-set_arch("x64")
 set_languages("c++23")
-set_optimize("faster")
-set_warnings("allextra", "error")
-set_defaultmode("releasedbg")
-
--- enable lto
-set_policy("build.optimization.lto", true)
+set_warnings("allextra")
 
 -- add rules
 add_rules("mode.debug", "mode.releasedbg")
 add_rules("plugin.vsxmake.autoupdate")
+
+-- enable lto
+set_policy("build.optimization.lto", true)
+set_policy("package.requires_lock", true)
 
 -- setup targets
 target("BakaAchievementEnabler")
