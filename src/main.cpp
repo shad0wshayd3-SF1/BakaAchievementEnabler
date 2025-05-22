@@ -4,11 +4,11 @@ namespace Hooks
 	{
 		static void Install()
 		{
-			static REL::Relocation target{ REL::ID(166267) };
-			static constexpr auto TARGET_ADDR{ 0x67 };
-			static constexpr auto TARGET_RETN{ 0x6C };
-			static constexpr auto TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
-			REL::safe_fill(target.address() + TARGET_ADDR, REL::NOP, TARGET_FILL);
+			static REL::Relocation target{ REL::ID(113625) };
+			static constexpr auto  TARGET_ADDR{ 0xE9 };
+			static constexpr auto  TARGET_RETN{ 0xEE };
+			static constexpr auto  TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
+			target.write_fill<TARGET_ADDR>(REL::NOP, TARGET_FILL);
 		}
 	}
 
@@ -16,11 +16,11 @@ namespace Hooks
 	{
 		static void Install()
 		{
-			static REL::Relocation target{ REL::ID(171028) };
-			static constexpr auto TARGET_ADDR{ 0x71 };
-			static constexpr auto TARGET_RETN{ 0xF3 };
-			static constexpr auto TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
-			REL::safe_fill(target.address() + TARGET_ADDR, REL::NOP, TARGET_FILL);
+			static REL::Relocation target{ REL::ID(117359) };
+			static constexpr auto  TARGET_ADDR{ 0x082 };
+			static constexpr auto  TARGET_RETN{ 0x104 };
+			static constexpr auto  TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
+			target.write_fill<TARGET_ADDR>(REL::NOP, TARGET_FILL);
 		}
 	}
 
@@ -28,11 +28,11 @@ namespace Hooks
 	{
 		static void Install()
 		{
-			static REL::Relocation target{ REL::ID(134148) };
-			static constexpr auto TARGET_ADDR{ 0x12F };
-			static constexpr auto TARGET_RETN{ 0x153 };
-			static constexpr auto TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
-			REL::safe_fill(target.address() + TARGET_ADDR, REL::NOP, TARGET_FILL);
+			static REL::Relocation target{ REL::ID(114443) };
+			static constexpr auto  TARGET_ADDR{ 0xAE };
+			static constexpr auto  TARGET_RETN{ 0xD4 };
+			static constexpr auto  TARGET_FILL{ TARGET_RETN - TARGET_ADDR };
+			target.write_fill<TARGET_ADDR>(REL::NOP, TARGET_FILL);
 		}
 	}
 
@@ -56,10 +56,8 @@ namespace
 		switch (a_msg->type)
 		{
 		case SFSE::MessagingInterface::kPostLoad:
-		{
 			Hooks::Install();
 			break;
-		}
 		default:
 			break;
 		}

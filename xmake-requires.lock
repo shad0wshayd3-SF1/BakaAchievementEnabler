@@ -11,10 +11,17 @@
             },
             version = "4.0.2"
         },
-        ["spdlog#bf122c86"] = {
+        ["commonlib-shared f420a9457fe6aecb2ed9f259f788476e589fb46e#0defcfe0"] = {
+            repo = {
+                commit = "47eca6ffcb79208b9f757df369b2ddad322aac16",
+                url = "https://github.com/libxse/libxse-xrepo"
+            },
+            version = "f420a945"
+        },
+        ["spdlog#9c36f0a9"] = {
             repo = {
                 branch = "master",
-                commit = "acb7ac966bdcfd6e70708d6085104db8cb1e6eb8",
+                commit = "da016bf271a4a37cd9e89cf772b0d3d730767843",
                 url = "https://gitlab.com/tboox/xmake-repo.git"
             },
             version = "v1.15.3"

@@ -1,35 +1,30 @@
----
+﻿---
 AccessModifierOffset: -4
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: DontAlign
 AlignArrayOfStructures: Left
-AlignConsecutiveAssignments:
-  Enabled: false
-AlignConsecutiveBitFields:
-  Enabled: false
-AlignConsecutiveDeclarations:
-  Enabled: false
-AlignConsecutiveMacros:
-  Enabled: true
+AlignConsecutiveAssignments: false
+AlignConsecutiveBitFields: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
 AlignEscapedNewlines: Left
-AlignOperands: AlignAfterOperator
-AlignTrailingComments:
-  Kind: Always
-  OverEmptyLines: 0
+AlignOperands: Align
+AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: false
+AllowAllConstructorInitializersOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortBlocksOnASingleLine: Never
+AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: false
-AllowShortEnumsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: Inline
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: Never
-AllowShortLambdasOnASingleLine: Inline
+AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: true
 AlwaysBreakTemplateDeclarations: Yes
-BinPackArguments: false
-BinPackParameters: false
-BitFieldColonSpacing: Both
+BinPackArguments: true
+BinPackParameters: true
+BitFieldColonSpacing: After
 BraceWrapping:
   AfterCaseLabel: true
   AfterClass: true
@@ -56,9 +51,10 @@ BreakBeforeInlineASMColon: Never
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: AfterColon
 BreakInheritanceList: AfterColon
-BreakStringLiterals: false
+BreakStringLiterals: true
 ColumnLimit: 0
 CompactNamespaces: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
 Cpp11BracedListStyle: false
@@ -85,9 +81,9 @@ Language: Cpp
 LineEnding: CRLF
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: All
-PPIndentWidth: 4
 PackConstructorInitializers: Never
 PointerAlignment: Left
+PPIndentWidth: 4
 QualifierAlignment: Leave
 ReferenceAlignment: Pointer
 ReflowComments: false
@@ -95,7 +91,7 @@ RemoveBracesLLVM: false
 RemoveSemicolon: false
 RequiresClausePosition: OwnLine
 RequiresExpressionIndentation: OuterScope
-SeparateDefinitionBlocks: Always
+SeparateDefinitionBlocks: Leave
 SortIncludes: CaseSensitive
 SortUsingDeclarations: Lexicographic
 SpaceAfterCStyleCast: false
@@ -110,8 +106,8 @@ SpaceBeforeInheritanceColon: true
 SpaceBeforeParens: ControlStatements
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceBeforeSquareBrackets: false
-SpaceInEmptyBlock: false
 SpacesBeforeTrailingComments: 2
+SpaceInEmptyBlock: false
 SpaceInEmptyParentheses: false
 SpacesInAngles: Never
 SpacesInCStyleCastParentheses: false
